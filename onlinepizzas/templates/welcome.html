@@ -1,6 +1,9 @@
 
 {% extends "layout.html" %}
 {% block body %}
+    {% if message %}
+	<p style="color: red" class="text-center">{{ message}}</p>
+	{% endif %}
     <div class="container text-center" style="margin-top: 75px">
     <div class="col-xl-">
             <div class="vertical-center">

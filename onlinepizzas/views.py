@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
@@ -11,17 +13,26 @@ def index(request):
 
 
 def login_view(request):
-    if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
-        username = form.data["username"]
-        password = form.data["password"]
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            if next is not None:
-                return redirect("menu_view")
+    if not request.user.is_authenticated:
+        if request.method == "POST":
+            form = AuthenticationForm(data=request.POST)
+            username = form.data["username"]
+            password = form.data["password"]
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                if next is not None:
+                    return redirect("menu_view")
+                else:
+                    return redirect("index")
             else:
-                return redirect("index")
+                return render(request, "welcome.html", {"message": "Invalid username/password"})
+        else:
+            form = AuthenticationForm()
+        context = {"form": form}
+        return render(request, 'registration/login.html', context)
+    else:
+        return redirect("index")
 
 
 def logout_view(request):
@@ -46,11 +57,13 @@ def register_view(request):
     return render(request, 'register.html', context)
 
 
+@login_required
 def menu_view(request):
     pizzas = Pizza.objects.all()
     return render(request, 'menu.html', {"pizzas": pizzas})
 
 
+@login_required
 def confirm_order(request):
     quantities = request.POST.getlist('qty')
     pizzas = Pizza.objects.all()
@@ -62,12 +75,13 @@ def confirm_order(request):
         if int(qty) > 0:
             ordered_pizzas.append(item)
             ordered_quantities.append(int(qty))
-            totals.append(item.price*int(qty))
+            totals.append(item.price * int(qty))
     return render(request, 'order_confirmation.html', {"order_summary": zip(ordered_pizzas, ordered_quantities, totals),
-                                                       "grand_total": sum(totals)+5,
-                                                       "grand_total_usd": round(float(sum(totals)+5)*1.12, 2)})
+                                                       "grand_total": sum(totals) + 5,
+                                                       "grand_total_usd": round(float(sum(totals) + 5) * 1.12, 2)})
 
 
+@login_required
 def place_order(request):
     quantities = request.POST.getlist('qty')
     pizzas = request.POST.getlist('pizza')
@@ -82,6 +96,7 @@ def place_order(request):
     return render(request, 'order.html')
 
 
+@login_required
 def user_orders_view(request):
     orders = Order.objects.filter(user=request.user)
     user_order_details = OrderDetails.objects.none()
