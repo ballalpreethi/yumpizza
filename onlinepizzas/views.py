@@ -64,7 +64,7 @@ def confirm_order(request):
             ordered_quantities.append(int(qty))
             totals.append(item.price*int(qty))
     return render(request, 'order_confirmation.html', {"order_summary": zip(ordered_pizzas, ordered_quantities, totals),
-                                                       "grand_total": sum(totals)+5})
+                                                       "grand_total": sum(totals)+5, "grand_total_usd": sum(totals)*1.12})
 
 
 def place_order(request):
