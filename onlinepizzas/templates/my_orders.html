@@ -1,0 +1,31 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="container">
+      <div class="text-center" style="padding-bottom: 15px;">
+        <h3>Your order history</h3>
+      </div>
+
+        {% if orders %}
+            <table>
+                <tbody>
+                    {% for order,vals in orders.items %}
+                        <tr>
+                            <td>
+                                <h5>Order placed on {{ order }}</h5>
+
+                                {% for val in vals %}
+                                    <label for="item">{{ val.itemId.name }} - {{ val.Qty }}</label><br>
+
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h2> You don't have ANY orders. It's time to change it!</h2>
+        {% endif %}
+    </div>
+{% endblock %}

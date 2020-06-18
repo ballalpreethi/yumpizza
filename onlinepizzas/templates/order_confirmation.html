@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block body %}
+    <form action= "{%  url  'place_order' %}" method="post">
+    {% csrf_token %}
+        <div class="container">
+          <div class="text-center" style="padding-bottom: 15px;font-size: x-large;font-variant-caps: all-small-caps;">
+            <h3>Please check your order and fill in the address for delivery</h3>
+          </div>
+          <table>
+            <thead>
+            <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            {% for item, qty, price in order_summary %}
+
+                <tr>
+                    <td><label for="{{item.name}}" style="font-size: x-large">{{ item.name }}</label><br>
+                        <label for="{{ item.description }}" style="font-size: large; font-style: italic;">{{ item.description }}</label>
+                    </td>
+                    <input type="hidden" name="pizza" value="{{ item.name }}">
+                    <td><label for="{{ qty }}">{{ qty }}</label> </td>
+                    <input type="hidden" name="qty" value="{{ qty }}">
+                    <td><label for="{{ price }}">{{ price }} EUR</label></td>
+                    <input type="hidden" name="price" value="{{ price }}">
+                </tr>
+
+            {% endfor %}
+
+          </table>
+
+        <div class="text-center" style="font-variant-caps: all-small-caps;">
+            <label for="{{ grand_total }}" style="font-size: large; font-variant-caps: all-small-caps;">
+                DELIVERY COST : 5 EUR <br>
+                TOTAL AMOUNT INCLUDING DELIVERY COST: <strong>{{ grand_total }} EUR</strong></label>
+            <h4 >Please provide your delivery address and telephone number below</h4><br>
+            <table style="border: 0px !important;font-size: medium">
+                <tr>
+                    <td style="border: 0px !important;"><label for="address">Address:</label></td>
+                    <td style="border: 0px !important;"><input type="text" placeholder="street, house number" required></td>
+                </tr>
+                <tr>
+                    <td style="border: 0px !important;"><label for="telephone">Telephone Number:</label></td>
+                    <td style="border: 0px !important;"><input type="tel" placeholder="phone number" required pattern="[0-9]*"></td>
+                </tr>
+
+            </table>
+            <div class="text-center" style="padding-top: 20px; ">
+                <button type="submit" style="font-size: x-large;font-variant-caps: all-small-caps;"> Place Order </button>
+            </div>
+        </div>
+
+
+        </div>
+    </form>
+{% endblock %}

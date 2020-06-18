@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <form action= "{%  url  'confirm_order' %}" method="post">
+    {% csrf_token %}
+        <div class="container">
+          <div class="text-center" style="padding-bottom: 15px;">
+              <h3>Our Menu</h3>
+              <h5>Please indicate the quantities of pizzas you wish to order</h5>
+          </div>
+
+          <table>
+            <thead>
+                <th scope="col">Pizza</th>
+                <th scope="col">Price per pizza</th>
+                <th scope="col">Quantity</th>
+            </thead>
+            {% for pizza in pizzas %}
+
+                <tr>
+                    <td>
+                        <label for="{{pizza.name}}" style="font-size: x-large">{{pizza.name}}</label><br>
+                        <label for="{{ pizza.description }}" style="font-size: large; font-style: italic;">{{ pizza.description }}</label>
+                    </td>
+                    <td><label for="{{ pizza.price }}">{{ pizza.price }} EUR </label></td>
+                    <input type="hidden" value="{{ pizza.price }}" name="price">
+                    <td><input name="qty" class="qty" type="number" min="0" max="100" value="0"></td>
+                </tr>
+
+            {% endfor %}
+          </table>
+        <div class="text-center" style="padding-top: 20px; ">
+          <button id="placeorder" type="submit" class="btn mx-1 my-xl-0 my-2" disabled
+                  style="font-size: x-large;font-variant-caps: all-small-caps;"> Place Order </button>
+        </div>
+
+    </div>
+
+{#    <script>#}
+{#    function addQty(name) {#}
+{#        if($('#Margarita').prop('checked')){#}
+{#            let val = $('#qty_${name}').val();#}
+{#            let set_val = parseInt(val) + 1#}
+{#            $('#qty_{{ name }}').val(set_val);#}
+{#        }#}
+{#    }#}
+{#    </script>#}
+    </form>
+{% endblock %}

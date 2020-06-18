@@ -1,0 +1,16 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container text-center" style="font-variant-caps: all-small-caps;">
+    <div style="padding-bottom: 15px;font-size: x-large">The delicious pizzas you ordered are on your way. We hope you enjoy them :)</div>
+    <label for="thankyoutext" style="font-style: italic;font-size: xx-large;">Thank you for your order and Happy Eating !!<br></label>
+    <div>
+        <p>Click below to see your order history</p>
+        <a href="{% url "user_orders_view" %}">
+            <button class="btn mx-1 my-xl-0 my-2">Order History</button>
+        </a>
+    </div>
+</div>
+
+{% endblock %}
